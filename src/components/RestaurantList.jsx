@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-
-import HeroSlider from "./UI/HeroSlider";
+import ParallaxScroll from './UI/ParallaxScroll.jsx';
+import HeroSlider from './UI/HeroSlider';
 
 const RestaurantList = () => {
   const [restaurants, setRestaurants] = useState([]);
@@ -15,21 +15,11 @@ const RestaurantList = () => {
   }, []);
 
   return (
-    <div>
-
-    <HeroSlider></HeroSlider>
-      <div className="container mx-auto">
-        <h1 className="text-2xl font-bold mb-4">Restaurants</h1>
-        <ul>
-          {restaurants.map((restaurant) => (
-            <li key={restaurant._id} className="mb-4 p-4 border rounded">
-              <h2 className="text-xl font-semibold">{restaurant.name}</h2>
-              <p>{restaurant.address}</p>
-              <p>{restaurant.telephone}</p>
-              <img src={`http://localhost:4000/public/${restaurant.image}`} alt={restaurant.name} className="w-full h-auto" />
-            </li>
-          ))}
-        </ul>
+    <div className="flex flex-col min-h-screen bg-gray-100">
+      <HeroSlider />
+      <div className="container mx-auto flex-1">
+        <h1 className="text-2xl font-bold mb-4"> Vist Our Restaurants</h1>
+        <ParallaxScroll restaurants={restaurants} />
       </div>
     </div>
   );
