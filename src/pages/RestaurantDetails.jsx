@@ -4,21 +4,23 @@ import axios from 'axios';
 
 const RestaurantDetails = () => {
   const { id } = useParams();
-  const [restaurant, setRestaurant] = useState(null);
+  const [restaurant, setRestaurant] = useState(null); // State to store restaurant details
 
+    // Fetch restaurant details
   useEffect(() => {
     const fetchRestaurantDetails = async () => {
       try {
         const response = await axios.get(`http://localhost:4000/api/restaurant/retrieve/${id}`);
         setRestaurant(response.data);
       } catch (error) {
-        console.error('Error fetching restaurant details:', error);
+        console.error('Error fetching restaurant details:', error); 
       }
     };
 
-    fetchRestaurantDetails();
-  }, [id]);
-
+    fetchRestaurantDetails(); // Call the function
+  }, [id]); // Only fetch restaurant details when the ID changes
+  
+ // Render restaurant details
   if (!restaurant) {
     return <div>Loading...</div>;
   }

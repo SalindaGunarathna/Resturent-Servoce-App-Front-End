@@ -3,53 +3,62 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faTrash } from '@fortawesome/free-solid-svg-icons';
 
+
+
 const RestaurantList = ({ onViewRestaurant }) => {
   const [restaurants, setRestaurants] = useState([]);
+
+  // Delete Confirmation
   const [deleteConfirmation, setDeleteConfirmation] = useState({
     isOpen: false,
     restaurantId: null,
-    restaurantName: '',
+    restaurantName: '', 
   });
 
   useEffect(() => {
-    fetchRestaurants();
-  }, []);
-
+    fetchRestaurants(); // Call the function
+  }, []); // Only call the function when the component mounts
+ 
+  // Fetch restaurants
   const fetchRestaurants = async () => {
     try {
       const response = await axios.get('http://localhost:4000/api/restaurant/retrieveall');
-      setRestaurants(response.data);
+      setRestaurants(response.data); // Update the state
     } catch (error) {
       console.error('Error fetching restaurants:', error);
     }
   };
-
+ 
+  // View Restaurant
   const handleViewRestaurant = (restaurantId) => {
     console.log('View restaurant details for:', restaurantId);
-    onViewRestaurant(restaurantId);
+    onViewRestaurant(restaurantId); // Pass the restaurant ID to the parent component
   };
 
+    // Delete Confirmation
   const openDeleteConfirmation = (restaurantId, restaurantName) => {
     setDeleteConfirmation({
       isOpen: true,
       restaurantId,
       restaurantName,
-    });
+    }); // Update the state
   };
 
+  // Close Delete Confirmation
   const closeDeleteConfirmation = () => {
     setDeleteConfirmation({
       isOpen: false,
       restaurantId: null,
       restaurantName: '',
-    });
+    }); // Update the state
   };
 
+  // Confirm Delete
   const confirmDeleteRestaurant = async () => {
     try {
       await axios.delete(`http://localhost:4000/api/restaurant/delete/${deleteConfirmation.restaurantId}`);
       fetchRestaurants(); // Refresh the restaurant list after deletion
-      closeDeleteConfirmation();
+      closeDeleteConfirmation(); // Close the delete confirmation dialog
     } catch (error) {
       console.error('Error deleting restaurant:', error);
     }

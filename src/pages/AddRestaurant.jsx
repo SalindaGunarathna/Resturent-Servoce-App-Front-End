@@ -11,14 +11,15 @@ const AddRestaurant = ({ onClose }) => {
   const [preview, setPreview] = useState(null);
   const [message, setMessage] = useState('');
 
+  
   const handleChange = (e) => {
     if (e.target.name === 'image') {
       const file = e.target.files[0];
       setRestaurantData({
         ...restaurantData,
-        image: file,
+        image: file, // Store the image file in the state
       });
-      const previewUrl = URL.createObjectURL(file);
+      const previewUrl = URL.createObjectURL(file); // Create a preview URL for the uploaded image
       setPreview(previewUrl);
     } else {
       const { name, value } = e.target;
@@ -28,7 +29,7 @@ const AddRestaurant = ({ onClose }) => {
       });
     }
   };
-
+  // Add the handleSubmit function
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -47,6 +48,7 @@ const AddRestaurant = ({ onClose }) => {
 
       if (response.status === 201) {
         setMessage('Restaurant added successfully');
+        // Reset form
         setRestaurantData({
           name: '',
           address: '',
@@ -62,7 +64,7 @@ const AddRestaurant = ({ onClose }) => {
         setMessage('Failed to add restaurant');
       }
     } catch (error) {
-      setMessage('Error adding restaurant: ' + error.message);
+      setMessage('Error adding restaurant: ' + error.message); // Display  unknown error message
     }
   };
 
