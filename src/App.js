@@ -1,23 +1,15 @@
-// src/App.js
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import RestaurantList from './components/RestaurantList';
-
+import React from "react";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
-
-//import RestaurantDetail from './components/RestaurantDetail'; // If you have this component
-//import AddRestaurant from './components/AddRestaurant'; // If you have this component
+import { BrowserRouter as Router } from "react-router-dom";
+import Navbar from "./components/navBar/Navbar";
+import Routers from "./routers/Routers";
 
 const App = () => {
   return (
     <Router>
-      <div className="App">
-        <Routes>
-          <Route path="/" element={<RestaurantList />} />
-         
-        </Routes>
-      </div>
+      <Navbar />
+      <Routers />
     </Router>
   );
 };
