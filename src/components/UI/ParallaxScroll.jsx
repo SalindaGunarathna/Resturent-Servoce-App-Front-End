@@ -30,7 +30,7 @@ const ParallaxScroll = ({ restaurants, className }) => {
     <div
       className={cn("overflow-y-auto w-full", className)}
       ref={gridRef}
-      style={{ height: '80vh', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      style={{ height: '100vh', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
     >
       <style>
         {`
