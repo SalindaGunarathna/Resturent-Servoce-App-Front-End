@@ -26,7 +26,7 @@ const RestaurantList = () => {
               <h2 className="text-xl font-semibold">{restaurant.name}</h2>
               <p>{restaurant.address}</p>
               <p>{restaurant.telephone}</p>
-              <img src={restaurant.image} alt={restaurant.name} className="w-full h-auto" />
+              <img src={`http://localhost:4000/public/${restaurant.image}`} alt={restaurant.name} className="w-full h-auto" />
             </li>
           ))}
         </ul>
