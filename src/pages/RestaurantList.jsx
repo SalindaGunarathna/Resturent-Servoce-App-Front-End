@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faTrash } from '@fortawesome/free-solid-svg-icons';
 
-const RestaurantList = () => {
+const RestaurantList = ({ onViewRestaurant }) => {
   const [restaurants, setRestaurants] = useState([]);
   const [deleteConfirmation, setDeleteConfirmation] = useState({
     isOpen: false,
@@ -24,6 +26,7 @@ const RestaurantList = () => {
 
   const handleViewRestaurant = (restaurantId) => {
     console.log('View restaurant details for:', restaurantId);
+    onViewRestaurant(restaurantId);
   };
 
   const openDeleteConfirmation = (restaurantId, restaurantName) => {
@@ -68,15 +71,16 @@ const RestaurantList = () => {
               <div className="flex justify-between">
                 <button
                   onClick={() => handleViewRestaurant(restaurant._id)}
-                  className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mr-2"
+                  className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md flex items-center"
                 >
+                  <FontAwesomeIcon icon={faEye} className="text-lg mr-2" />
                   View
                 </button>
                 <button
                   onClick={() => openDeleteConfirmation(restaurant._id, restaurant.name)}
-                  className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md"
+                  className="bg-red-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md flex items-center"
                 >
-                  Delete
+                  <FontAwesomeIcon icon={faTrash} className="text-lg mr-2" />
                 </button>
               </div>
             </div>
@@ -92,7 +96,7 @@ const RestaurantList = () => {
                     onClick={confirmDeleteRestaurant}
                     className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md mr-2"
                   >
-                    yes
+                    Yes
                   </button>
                   <button
                     onClick={closeDeleteConfirmation}
