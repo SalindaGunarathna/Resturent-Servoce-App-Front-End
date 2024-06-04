@@ -13,6 +13,7 @@ const EditRestaurant = ({ restaurantId, onClose }) => {
   const [imagePreview, setImagePreview] = useState(null);
   const [editMode, setEditMode] = useState(false); // Track whether edit mode is active
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [errors, setErrors] = useState({}); // State for form validation errors
 
   useEffect(() => {
     fetchRestaurant();
@@ -60,8 +61,42 @@ const EditRestaurant = ({ restaurantId, onClose }) => {
     setImagePreview(URL.createObjectURL(file));
   };
 
+  const validateForm = () => {
+    let isValid = true;
+    const newErrors = {};
+
+    if (!formData.name.trim()) {
+      newErrors.name = 'Name is required';
+      isValid = false;
+    }
+
+    if (!formData.address.trim()) {
+      newErrors.address = 'Address is required';
+      isValid = false;
+    }
+
+    // Validate telephone format
+    const telephoneRegex = /^\d{10,15}$/;
+    if (!formData.telephone.trim()) {
+      newErrors.telephone = 'Telephone is required';
+      isValid = false;
+    } else if (!telephoneRegex.test(formData.telephone.trim())) {
+      newErrors.telephone = 'Telephone must be between 10 to 15 digits only include number';
+      isValid = false;
+    }
+
+   
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
 
     try {
       const formDataToSubmit = new FormData();
@@ -72,12 +107,15 @@ const EditRestaurant = ({ restaurantId, onClose }) => {
         formDataToSubmit.append('image', formData.image);
       }
 
+      const token = localStorage.getItem('token'); // Retrieve token from local storage
+
       const response = await axios.put(
         `http://localhost:4000/api/restaurant/update/${restaurantId}`,
         formDataToSubmit,
         {
           headers: {
             'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`, // Pass the token as a Bearer token in the Authorization header
           },
         }
       );
@@ -86,7 +124,6 @@ const EditRestaurant = ({ restaurantId, onClose }) => {
         setShowSuccessDialog(true);
         setTimeout(() => {
           setShowSuccessDialog(false);
-          
         }, 3000); // delay for 3 seconds
       } else {
         alert('Failed to update restaurant');
@@ -125,6 +162,7 @@ const EditRestaurant = ({ restaurantId, onClose }) => {
                  rounded-md shadow-sm focus:border-blue-500
                   focus:ring-blue-500 sm:text-sm"
               />
+              {errors.image && <p className="text-red-500 text-sm mt-1">{errors.image}</p>}
             </div>
           </div>
           <div className="flex items-center mb-4">
@@ -136,6 +174,7 @@ const EditRestaurant = ({ restaurantId, onClose }) => {
                 type="text"
                 id="name"
                 name="name"
+                maxLength={200} // Example maximum length
                 value={formData.name}
                 onChange={handleChange}
                 disabled={!editMode}
@@ -148,6 +187,7 @@ const EditRestaurant = ({ restaurantId, onClose }) => {
                 onClick={() => toggleEditMode('name')}
               />
             </div>
+            {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
           </div>
           <div className="flex items-center mb-4">
             <label htmlFor="address" className="block w-1/4 text-sm font-medium text-gray-700">
@@ -158,6 +198,7 @@ const EditRestaurant = ({ restaurantId, onClose }) => {
                 type="text"
                 id="address"
                 name="address"
+                maxLength={200} // Example maximum length
                 value={formData.address}
                 onChange={handleChange}
                 disabled={!editMode}
@@ -170,6 +211,7 @@ const EditRestaurant = ({ restaurantId, onClose }) => {
                 onClick={() => toggleEditMode('address')}
               />
             </div>
+            {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
           </div>
           <div className="flex items-center mb-4">
             <label htmlFor="telephone" className="block w-1/4 text-sm font-medium text-gray-700">
@@ -192,6 +234,7 @@ const EditRestaurant = ({ restaurantId, onClose }) => {
                 onClick={() => toggleEditMode('telephone')}
               />
             </div>
+            {errors.telephone && <p className="text-red-500 text-sm mt-1">{errors.telephone}</p>}
           </div>
           <div className="flex items-center justify-end">
             {editMode && (

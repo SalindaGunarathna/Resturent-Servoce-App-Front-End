@@ -10,10 +10,27 @@ const AddRestaurant = ({ onClose }) => {
   });
   const [preview, setPreview] = useState(null);
   const [message, setMessage] = useState('');
+  const [errors, setErrors] = useState({
+    name: '',
+    address: '',
+    telephone: '',
+    image: '',
+  });
 
-  
   const handleChange = (e) => {
-    if (e.target.name === 'image') {
+    const { name, value } = e.target;
+    setRestaurantData({
+      ...restaurantData,
+      [name]: value,
+    });
+
+    // Clear errors when user starts typing
+    setErrors({
+      ...errors,
+      [name]: '',
+    });
+
+    if (name === 'image') {
       const file = e.target.files[0];
       setRestaurantData({
         ...restaurantData,
@@ -21,15 +38,9 @@ const AddRestaurant = ({ onClose }) => {
       });
       const previewUrl = URL.createObjectURL(file); // Create a preview URL for the uploaded image
       setPreview(previewUrl);
-    } else {
-      const { name, value } = e.target;
-      setRestaurantData({
-        ...restaurantData,
-        [name]: value,
-      });
     }
   };
-  // Add the handleSubmit function
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -39,10 +50,12 @@ const AddRestaurant = ({ onClose }) => {
       formData.append('address', restaurantData.address);
       formData.append('telephone', restaurantData.telephone);
       formData.append('image', restaurantData.image);
+      const token = localStorage.getItem('token'); // Retrieve token from local storage
 
       const response = await axios.post('http://localhost:4000/api/restaurant/create', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`, // Pass the token as a Bearer token in the Authorization header
         },
       });
 
@@ -55,10 +68,10 @@ const AddRestaurant = ({ onClose }) => {
           telephone: '',
           image: null,
         });
-        
+
         setPreview(null);
         if (typeof onClose === 'function') {
-          onClose(); 
+          onClose();
         }
       } else {
         setMessage('Failed to add restaurant');
@@ -68,8 +81,42 @@ const AddRestaurant = ({ onClose }) => {
     }
   };
 
+  // Basic validation function to check required fields and telephone format
+  const validateForm = () => {
+    let isValid = true;
+    const newErrors = {};
+
+    if (!restaurantData.name.trim()) {
+      newErrors.name = 'Name is required';
+      isValid = false;
+    }
+
+    if (!restaurantData.address.trim()) {
+      newErrors.address = 'Address is required';
+      isValid = false;
+    }
+
+    // Validate telephone format
+    const telephoneRegex = /^\d{10,15}$/;
+    if (!restaurantData.telephone.trim()) {
+      newErrors.telephone = 'Telephone is required';
+      isValid = false;
+    } else if (!telephoneRegex.test(restaurantData.telephone.trim())) {
+      newErrors.telephone = 'Telephone must be between 10 to 15 digits';
+      isValid = false;
+    }
+
+    if (!restaurantData.image) {
+      newErrors.image = 'Image is required';
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
   return (
-    <div className="bg-white p-4 rounded-lg shadow-lg bg-gray-100">
+    <div className=" p-4 rounded-lg shadow-lg bg-gray-100 ">
       <h2 className="text-lg font-semibold mb-4">Add Restaurant</h2>
       {message && (
         <div className="mb-4 text-center">
@@ -102,8 +149,13 @@ const AddRestaurant = ({ onClose }) => {
               value={restaurantData.name}
               onChange={handleChange}
               required
-              className="w-full border-gray-300 rounded-md shadow-sm h-10 px-2 focus:ring-blue-500 sm:text-sm"
+              maxLength={100} // Example maximum length
+              className={`w-full border-gray-300 rounded-md shadow-sm h-10 px-2 focus:ring-blue-500 sm:text-sm ${errors.name ? 'border-red-500' : ''
+                }`}
             />
+            {errors.name && (
+              <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+            )}
           </div>
           <div className="flex flex-col w-1/2">
             <label htmlFor="address" className="block text-sm font-medium text-gray-700">
@@ -116,8 +168,13 @@ const AddRestaurant = ({ onClose }) => {
               value={restaurantData.address}
               onChange={handleChange}
               required
-              className="w-full border-gray-300 rounded-md shadow-sm h-10 px-2 focus:ring-blue-500 sm:text-sm"
+              maxLength={200} // Example maximum length
+              className={`w-full border-gray-300 rounded-md shadow-sm h-10 px-2 focus:ring-blue-500 sm:text-sm ${errors.address ? 'border-red-500' : ''
+                }`}
             />
+            {errors.address && (
+              <p className="text-red-500 text-sm mt-1">{errors.address}</p>
+            )}
           </div>
         </div>
         <div className="flex items-center mb-4">
@@ -132,8 +189,13 @@ const AddRestaurant = ({ onClose }) => {
               value={restaurantData.telephone}
               onChange={handleChange}
               required
-              className="w-full border-gray-300 rounded-md shadow-sm h-10 px-2 focus:ring-blue-500 sm:text-sm"
+              maxLength={15} // Example maximum length
+              className={`w-full border-gray-300 rounded-md shadow-sm h-10 px-2 focus:ring-blue-500 sm:text-sm ${errors.telephone ? 'border-red-500' : ''
+                }`}
             />
+            {errors.telephone && (
+              <p className="text-red-500 text-sm mt-1">{errors.telephone}</p>
+            )}
           </div>
           <div className="flex flex-col w-1/2">
             <label htmlFor="image" className="block text-sm font-medium text-gray-700">
@@ -146,15 +208,20 @@ const AddRestaurant = ({ onClose }) => {
               accept="image/*"
               onChange={handleChange}
               required
-              className="mt-1 block w-full border-gray-300 rounded-md 
-              shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              className={`mt-1 block w-full border-gray-300 rounded-md 
+              shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${errors.image ? 'border-red-500' : ''
+                }`}
             />
+            {errors.image && (
+              <p className="text-red-500 text-sm mt-1">{errors.image}</p>
+            )}
           </div>
         </div>
 
         <div className="flex items-center justify-end">
           <button
             type="submit"
+            onClick={validateForm}
             className="inline-flex justify-center py-2 px-4 border
              border-transparent shadow-sm text-sm font-medium rounded-md 
              text-white bg-blue-600 hover:bg-blue-700 focus:outline-none

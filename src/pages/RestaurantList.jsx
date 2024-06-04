@@ -56,7 +56,16 @@ const RestaurantList = ({ onViewRestaurant }) => {
   // Confirm Delete
   const confirmDeleteRestaurant = async () => {
     try {
-      await axios.delete(`http://localhost:4000/api/restaurant/delete/${deleteConfirmation.restaurantId}`);
+      const token = localStorage.getItem('token'); // Retrieve token from local storage
+
+      await axios.delete(`http://localhost:4000/api/restaurant/delete/${deleteConfirmation.restaurantId}`, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`, // Pass the token as a Bearer token in the Authorization header
+        },
+      });
+      
+      
       fetchRestaurants(); // Refresh the restaurant list after deletion
       closeDeleteConfirmation(); // Close the delete confirmation dialog
     } catch (error) {
