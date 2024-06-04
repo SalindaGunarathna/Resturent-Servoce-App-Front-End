@@ -17,7 +17,7 @@
 
 .slider__item-02 {
   background: linear-gradient(rgb(0, 13, 107, 0.5), rgb(0, 13, 107, 0.5)),
-    url("../../assets/images/homepage2.jpg");
+    url("../../assets/images/homepage4.jpg");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -26,7 +26,7 @@
 
 .slider__item-03 {
   background: linear-gradient(rgb(0, 13, 107, 0.5), rgb(0, 13, 107, 0.5)),
-    url("../../assets/images/homepage1.jpg");
+    url("../../assets/images/homepage5.jpg");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -35,7 +35,7 @@
 
 .slider__item-04 {
   background: linear-gradient(rgb(0, 13, 107, 0.5), rgb(0, 13, 107, 0.5)),
-    url("../../assets/images/homepage2.jpg");
+    url("../../assets/images/homepage6.jpg");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
