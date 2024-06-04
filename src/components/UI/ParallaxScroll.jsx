@@ -40,7 +40,7 @@ const ParallaxScroll = ({ restaurants, className }) => {
           }
         `}
       </style>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-start max-w-5xl mx-auto gap-10 py-10 px-10">
+      <div className="grid grid-cols-1  md:grid-cols-2 lg:grid-cols-3 items-start max-w-5xl mx-auto gap-10 py-10 px-10">
         <div className="grid gap-10">
           {firstPart.map((restaurant, idx) => (
             <motion.div style={{ y: translateFirst }} key={"grid-1" + idx} className="relative">
@@ -51,7 +51,7 @@ const ParallaxScroll = ({ restaurants, className }) => {
                 width={400}
                 alt={restaurant.name}
               />
-              <div className="absolute bottom-4 left-4 bg-white p-2 rounded">
+              <div className="absolute bottom-4 left-4 bg-opacity-50 bg-white p-2 rounded">
                 <h2 className="text-xl font-semibold">{restaurant.name}</h2>
                 <p>{restaurant.address}</p>
                 <p>{restaurant.telephone}</p>
@@ -65,7 +65,7 @@ const ParallaxScroll = ({ restaurants, className }) => {
             </motion.div>
           ))}
         </div>
-        <div className="grid gap-10">
+        <div className="grid gap-10 bg-blue-100">
           {secondPart.map((restaurant, idx) => (
             <motion.div style={{ y: translateSecond }} key={"grid-2" + idx} className="relative">
               <img
@@ -75,7 +75,7 @@ const ParallaxScroll = ({ restaurants, className }) => {
                 width={400}
                 alt={restaurant.name}
               />
-              <div className="absolute bottom-4 left-4 bg-white p-2 rounded">
+              <div className="absolute bottom-4 left-4  bg-opacity-50 bg-white p-2 rounded">
                 <h2 className="text-xl font-semibold">{restaurant.name}</h2>
                 <p>{restaurant.address}</p>
                 <p>{restaurant.telephone}</p>
@@ -99,7 +99,7 @@ const ParallaxScroll = ({ restaurants, className }) => {
                 width={400}
                 alt={restaurant.name}
               />
-              <div className="absolute bottom-4 left-4 bg-white p-2 rounded">
+              <div className="absolute bottom-4 left-4 bg-opacity-50 bg-white p-2 rounded">
                 <h2 className="text-xl font-semibold">{restaurant.name}</h2>
                 <p>{restaurant.address}</p>
                 <p>{restaurant.telephone}</p>
